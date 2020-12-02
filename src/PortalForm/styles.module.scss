@@ -1,0 +1,27 @@
+.mappingBar {
+  .row {
+    margin: 1rem 0;
+  }
+}
+
+.flexColumn {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.durationField {
+  width: 45%;
+}
+
+.createBtn {
+  width: 100%;
+}
+
+.portalRadioGroup {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.75rem 0;
+}
