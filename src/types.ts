@@ -43,6 +43,8 @@ export interface Portal {
   connection: [string, string] // sorted alphabetically
   size: PortalSize
   expiresUtc: string
+  hours: number
+  minutes: number
   timeLeft: number
 }
 

@@ -5,6 +5,8 @@ const fetchPortals = async (): Promise<Portal[]> => {
   return payload.map(p => ({
     connection: p.connection,
     size: p.size,
+    hours: p.hours,
+    minutes: p.minutes,
     timeLeft: (p.minutes + p.hours * 60) * 1000,
     expiresUtc: ""
   }))

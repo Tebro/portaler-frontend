@@ -195,7 +195,7 @@ const PortalMap = () => {
         const label =
           timeLeft > future
             ? ''
-            : Duration.fromMillis(timeLeft).toFormat("h'h' m'm'")
+            : `${p.hours}h ${p.minutes}m`
 
         if (!elms.has(id)) {
           elms.set(id, {
