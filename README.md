@@ -1,3 +1,8 @@
+This system can be hosted by yourself for your own group. You can find instructions here:
+
+https://gist.github.com/Tebro/70325960f0633e3185d2fc2655ec21fc
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
