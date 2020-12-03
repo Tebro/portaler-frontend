@@ -167,7 +167,7 @@ const MappingBar = () => {
         </div>
       </form>
       <UserSettings zones={zones} />
-      <Routing fromZoneId={from.id} />
+      <Routing fromZoneId={from.id} zones={zones}/>
     </>
   )
 }
