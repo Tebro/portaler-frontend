@@ -21,6 +21,7 @@ import ZoneSearch from '../ZoneSearch'
 import PortalSizeSelector from './PortalSizeSelector'
 import styles from './styles.module.scss'
 import useAddPortal from './useAddPortal'
+import {Routing} from "../Routing";
 
 const portalSizeValid = (size: PortalSize) => [0, 2, 7, 20].includes(size)
 
@@ -166,6 +167,7 @@ const MappingBar = () => {
         </div>
       </form>
       <UserSettings zones={zones} />
+      <Routing fromZoneId={from.id} />
     </>
   )
 }
