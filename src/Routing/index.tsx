@@ -63,7 +63,7 @@ const FILTERS = [
   },
   {
     value: "nobzcity",
-    text: "No city portals to black zones"
+    text: "No city portals to/from black zones"
   }
 ]
 
@@ -78,7 +78,9 @@ export const Routing: React.FC<RoutingProps> = ({fromZoneId, zones}) => {
   const [filters, setFilters] = useState(FILTERS.map(f => ({...f, selected: false})))
   useEffect(() => {
     if (fromZoneId !== '0' && isOpen) {
-      fetchRouteToCity(fromZoneId, activeFilterValues(filters)).then(setRouteToCity)
+      fetchRouteToCity(fromZoneId, activeFilterValues(filters)).then(setRouteToCity).catch(() => setRouteToCity([]))
+    } else {
+      setRouteToCity(undefined)
     }
   }, [fromZoneId, setRouteToCity, isOpen, filters])
 
@@ -87,7 +89,9 @@ export const Routing: React.FC<RoutingProps> = ({fromZoneId, zones}) => {
 
   useEffect(() => {
     if (fromZoneId !== '0' && toZone.id !== '0' && isOpen) {
-      fetchRouteToZone(fromZoneId, toZone.id, activeFilterValues(filters)).then(setRouteToZone)
+      fetchRouteToZone(fromZoneId, toZone.id, activeFilterValues(filters)).then(setRouteToZone).catch(() => setRouteToZone([]))
+    } else {
+      setRouteToCity(undefined)
     }
   }, [fromZoneId, toZone, isOpen, setRouteToZone, filters])
 
@@ -125,9 +129,11 @@ export const Routing: React.FC<RoutingProps> = ({fromZoneId, zones}) => {
           </div>
           <div className={styles.route}>
             <p>To closest city</p>
-            {fromZoneId !== '0' && (routeToCity?.map(z =>
+            {fromZoneId === '0' && <p>Please select a From zone</p>}
+            {routeToCity?.length === 0 && <p>Could not find a valid route</p>}
+            {routeToCity?.map(z =>
               <div className={styles.routeZone}>--> {z.name}</div>
-            ) || <p>Loading...</p>) || <p>Please select a From zone</p>}
+            )}
           </div>
           <div className={styles.route}>
             <ZoneSearch
@@ -138,9 +144,12 @@ export const Routing: React.FC<RoutingProps> = ({fromZoneId, zones}) => {
               variant="outlined"
             />
             <p>Your route</p>
-            {toZone.id !== '0' && (fromZoneId !== '0' && (routeToZone?.map(z =>
+            {fromZoneId === '0' && <p>Please select a From zone</p>}
+            {toZone.id === '0' && <p>Please select where to</p>}
+            {routeToZone?.length === 0 && <p>Could not find a valid route</p>}
+            {routeToZone?.map(z =>
               <div className={styles.routeZone}>--> {z.name}</div>
-            ) || <p>Loading...</p>) || <p>Please select a From zone</p>)}
+            )}
           </div>
         </div>
       </AccordionDetails>
