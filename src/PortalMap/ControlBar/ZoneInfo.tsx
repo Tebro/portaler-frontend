@@ -26,6 +26,9 @@ const ZoneInfo: FC<ZoneInfoProps> = ({ zone }) =>
           <strong>{resource.name}:</strong> {resource.tier}
         </Paper>
       )}
+      {zone.info?.markers && <Paper variant="outlined" className={styles.zoneInfo}>
+        <strong>Markers: </strong> {zone.info.markers.join(', ')}
+      </Paper>}
     </div>
   )
 
