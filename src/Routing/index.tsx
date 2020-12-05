@@ -91,7 +91,7 @@ export const Routing: React.FC<RoutingProps> = ({fromZoneId, zones}) => {
     if (fromZoneId !== '0' && toZone.id !== '0' && isOpen) {
       fetchRouteToZone(fromZoneId, toZone.id, activeFilterValues(filters)).then(setRouteToZone).catch(() => setRouteToZone([]))
     } else {
-      setRouteToCity(undefined)
+      setRouteToZone(undefined)
     }
   }, [fromZoneId, toZone, isOpen, setRouteToZone, filters])
 
