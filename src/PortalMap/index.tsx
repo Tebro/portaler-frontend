@@ -82,17 +82,15 @@ const PortalMap = () => {
   const cyTapHandler = useCallback(
     (e: cytoscape.EventObject) => {
       const t = e.target
-      if (t === cy.current) {
-        clearActives()
-      }
+      clearActives()
 
-      if (t.isNode()) {
+      if (t.isNode && t.isNode()) {
         const name = e.target.data('zoneName')
         const id = e.target.data('zoneId')
 
         dispatch({ type: PortalMapActionTypes.INSPECT, inspectId: id })
         setActiveZoneName(name)
-      } else if (t.isEdge()) {
+      } else if (t.isEdge && t.isEdge()) {
         setActivePortal(t.data('portalId'))
       }
 
@@ -108,8 +106,7 @@ const PortalMap = () => {
         container: containerRef.current,
       } as CytoscapeOptions)
 
-      cy.current.on('tap', 'node', cyTapHandler)
-      cy.current.on('tap', 'edge', cyTapHandler)
+      cy.current.on('tap', cyTapHandler)
     } else {
       cy.current.style(graphStyle)
     }
