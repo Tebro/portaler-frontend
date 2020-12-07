@@ -18,6 +18,7 @@ import defaultSettings from './defaultSettings'
 import graphStyle from './graphStyle'
 import { portalSizeToColor, zoneColorToColor } from './mapStyle'
 import styles from './styles.module.scss'
+import {act} from "react-dom/test-utils";
 
 cytoscape.use(COSEBilkent)
 
@@ -65,21 +66,38 @@ const PortalMap = () => {
   const [score, setScore] = useState<number>(-1)
   const [remove, setRemove] = useState<string[]>([])
   const [activeZoneName, setActiveZoneName] = useState<string>('')
+  const [activePortal, setActivePortal] = useState<string[] | undefined>()
+  const activePortalZoneNames = zones.filter(z => activePortal && activePortal.indexOf(z.id) >= 0).map(z => z.name)
+
+  const clearActives = useCallback(() => {
+    setActiveZoneName('')
+    setActivePortal(undefined)
+  }, [])
 
   const activeZone = useMemo<Zone | null>(
     () => zones.find((z) => z.name === activeZoneName) ?? null,
     [zones, activeZoneName]
   )
 
-  const cyEventHandler = useCallback(
+  const cyTapHandler = useCallback(
     (e: cytoscape.EventObject) => {
-      const name = e.target.data('zoneName')
-      const id = e.target.data('zoneId')
+      const t = e.target
+      if (t === cy.current) {
+        clearActives()
+      }
 
-      dispatch({ type: PortalMapActionTypes.INSPECT, inspectId: id })
-      setActiveZoneName(name)
+      if (t.isNode()) {
+        const name = e.target.data('zoneName')
+        const id = e.target.data('zoneId')
+
+        dispatch({ type: PortalMapActionTypes.INSPECT, inspectId: id })
+        setActiveZoneName(name)
+      } else if (t.isEdge()) {
+        setActivePortal(t.data('portalId'))
+      }
+
     },
-    [dispatch]
+    [clearActives, dispatch]
   )
 
   useEffect(() => {
@@ -90,11 +108,12 @@ const PortalMap = () => {
         container: containerRef.current,
       } as CytoscapeOptions)
 
-      cy.current.on('tap', 'node', cyEventHandler)
+      cy.current.on('tap', 'node', cyTapHandler)
+      cy.current.on('tap', 'edge', cyTapHandler)
     } else {
       cy.current.style(graphStyle)
     }
-  }, [cyEventHandler])
+  }, [cyTapHandler])
 
   const filteredZones = useMemo(
     () =>
@@ -203,6 +222,7 @@ const PortalMap = () => {
             element: {
               data: {
                 id,
+                portalId: p.connection,
                 source,
                 target,
                 label,
@@ -298,6 +318,8 @@ const PortalMap = () => {
         handleHome={handleHome}
         reloadMap={reloadMap}
         zone={activeZone || null}
+        portalId={activePortal}
+        portalZoneNames={activePortalZoneNames}
       />
       <div className={styles.cyto}>
         <div ref={containerRef} />
