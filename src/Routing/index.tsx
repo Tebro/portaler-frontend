@@ -36,7 +36,7 @@ const RoutingSettings: React.FC<RoutingSettingsProps> = ({open, onClose, filterO
     <DialogTitle>Select filter</DialogTitle>
     <List>
       {filterOptions.map(option => (
-        <ListItem button onClick={() => toggleFilter(option.value)}>
+        <ListItem key={option.value} button onClick={() => toggleFilter(option.value)}>
           <ListItemAvatar>
             <Avatar>
               {(option.selected && <CheckBox />) || <CheckBoxOutlineBlank /> }
