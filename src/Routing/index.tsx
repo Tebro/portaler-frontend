@@ -6,11 +6,11 @@ import {
   Dialog,
   DialogTitle,
   List,
-  ListItem, ListItemAvatar, ListItemText,
+  ListItem, ListItemAvatar, ListItemText, MenuItem, Select,
 } from "@material-ui/core";
 import styles from './styles.module.scss'
 import {Zone} from "../types";
-import {fetchRouteToCity, fetchRouteToZone} from "../common/utils/fetchRouting";
+import {fetchRouteToCity, fetchRouteToMarker, fetchRouteToZone} from "../common/utils/fetchRouting";
 import ZoneSearch from "../ZoneSearch";
 import {DEFAULT_ZONE} from "../common/data/constants";
 import {CheckBox, CheckBoxOutlineBlank} from "@material-ui/icons";
@@ -72,13 +72,23 @@ const activeFilterValues = (filters: FilterOption[]): string[] =>
 
 
 
+const minimapMarkerValues = [
+  {value: "roads_of_avalon_solo_pve", name: "Green chest"},
+  {value: "roads_of_avalon_group_pve", name: "Blue chest"},
+  {value: "roads_of_avalon_raid_pve", name: "Gold chest"},
+  {value: "dungeon_group", name: "Static group dungeon"},
+  {value: "dungeon_solo", name: "Static solo dungeon"},
+]
+
 export const Routing: React.FC<RoutingProps> = ({fromZoneId, zones}) => {
   const [routeToCity, setRouteToCity] = useState<Zone[]>()
   const [isOpen, setIsOpen] = useState(false)
   const [filters, setFilters] = useState(FILTERS.map(f => ({...f, selected: false})))
   useEffect(() => {
     if (fromZoneId !== '0' && isOpen) {
-      fetchRouteToCity(fromZoneId, activeFilterValues(filters)).then(setRouteToCity).catch(() => setRouteToCity([]))
+      fetchRouteToCity(fromZoneId, activeFilterValues(filters))
+        .then(setRouteToCity)
+        .catch(() => setRouteToCity([]))
     } else {
       setRouteToCity(undefined)
     }
@@ -89,11 +99,26 @@ export const Routing: React.FC<RoutingProps> = ({fromZoneId, zones}) => {
 
   useEffect(() => {
     if (fromZoneId !== '0' && toZone.id !== '0' && isOpen) {
-      fetchRouteToZone(fromZoneId, toZone.id, activeFilterValues(filters)).then(setRouteToZone).catch(() => setRouteToZone([]))
+      fetchRouteToZone(fromZoneId, toZone.id, activeFilterValues(filters))
+        .then(setRouteToZone)
+        .catch(() => setRouteToZone([]))
     } else {
       setRouteToZone(undefined)
     }
   }, [fromZoneId, toZone, isOpen, setRouteToZone, filters])
+
+  const [selectedMarker, setSelectedMarker] = useState('')
+  const [routeToMarker, setRouteToMarker] = useState<Zone[]>()
+
+  useEffect(() => {
+    if (isOpen && fromZoneId !== '0' && selectedMarker !== '') {
+      fetchRouteToMarker(fromZoneId, selectedMarker, activeFilterValues(filters))
+        .then(setRouteToMarker)
+        .catch(() => setRouteToMarker([]))
+    } else {
+      setRouteToMarker(undefined)
+    }
+  }, [fromZoneId, selectedMarker, isOpen, setRouteToMarker, filters])
 
   const [showSettings, setShowSettings] = useState(false)
 
@@ -148,6 +173,21 @@ export const Routing: React.FC<RoutingProps> = ({fromZoneId, zones}) => {
             {toZone.id === '0' && <p>Please select where to</p>}
             {routeToZone?.length === 0 && <p>Could not find a valid route</p>}
             {routeToZone?.map(z =>
+              <div className={styles.routeZone}>--> {z.name}</div>
+            )}
+          </div>
+          <div className={styles.route}>
+            <p>To map marker</p>
+            <Select
+              value={selectedMarker}
+              onChange={e => setSelectedMarker(e.target.value as string)}
+              placeholder="Select marker"
+            >
+              {minimapMarkerValues.map(item => <MenuItem key={item.value} value={item.value}>{item.name}</MenuItem>)}
+            </Select>
+            {fromZoneId === '0' && <p>Please select a From zone</p>}
+            {routeToMarker?.length === 0 && <p>Could not find a valid route</p>}
+            {routeToMarker?.map(z =>
               <div className={styles.routeZone}>--> {z.name}</div>
             )}
           </div>

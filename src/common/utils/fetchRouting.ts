@@ -9,3 +9,6 @@ export const fetchRouteToCity = (fromId: string, filters: string[]): Promise<Zon
 
 export const fetchRouteToZone = (fromId: string, toId: string, filters: string[]): Promise<Zone[]> =>
   fetch(`/api/route/${fromId}/to/${toId}${filters.length > 0 ? `?${filtersQuery(filters)}` : ''}`).then(r => r.json())
+
+export const fetchRouteToMarker = (fromId: string, toMarker: string, filters: string[]): Promise<Zone[]> =>
+  fetch(`/api/route/${fromId}/to/marker/${toMarker}${filters.length > 0 ? `?${filtersQuery(filters)}` : ''}`).then(r => r.json())
