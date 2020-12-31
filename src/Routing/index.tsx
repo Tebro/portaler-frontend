@@ -76,8 +76,9 @@ const minimapMarkerValues = [
   {value: "roads_of_avalon_solo_pve", name: "Green chest"},
   {value: "roads_of_avalon_group_pve", name: "Blue chest"},
   {value: "roads_of_avalon_raid_pve", name: "Gold chest"},
-  {value: "dungeon_group", name: "Static group dungeon"},
   {value: "dungeon_solo", name: "Static solo dungeon"},
+  {value: "dungeon_group", name: "Static group dungeon"},
+  {value: "dungeon_elite", name: "Static Avalonian dungeon"},
 ]
 
 export const Routing: React.FC<RoutingProps> = ({fromZoneId, zones}) => {
